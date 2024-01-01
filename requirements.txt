@@ -2,3 +2,8 @@ langchain
 openai
 python-dotenv
 streamlit
+ctransformers
+
+pypdf
+chromadb
+tiktoken
