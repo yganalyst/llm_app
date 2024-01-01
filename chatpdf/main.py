@@ -1,15 +1,11 @@
-from dotenv import load_dotenv
-load_dotenv()
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
-from langchain.retrievers.multi_query import MultiQueryRetriever
 from langchain.chains import RetrievalQA
 import streamlit as st
-import os
-import tempfile
+import os, tempfile
 
 
 # 제목
@@ -54,13 +50,14 @@ if uploaded_file is not None:
     question = st.text_input("질문을 입력하세요")
 
     if st.button('질문하기'):
-        llm = ChatOpenAI(
-            temperature=0,
-            max_tokens=200    
-        )
-        qa_chain = RetrievalQA.from_chain_type(
-            llm=llm, 
-            retriever=db.as_retriever()
-        )
-        result = qa_chain({"query":question})
-        st.write(result["result"])
+        with st.spinner('답변을 생성 중입니다...'):
+            llm = ChatOpenAI(
+                temperature=0,
+                # max_tokens=300    
+            )
+            qa_chain = RetrievalQA.from_chain_type(
+                llm=llm, 
+                retriever=db.as_retriever()
+            )
+            result = qa_chain({"query":question})
+            st.write(result["result"])
